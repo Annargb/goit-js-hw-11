@@ -35,7 +35,7 @@ function onInputSearch(event) {
       renderImages(response.data.hits);
       loadMoreBtn.classList.remove('hidden-btn');
     })
-    .catch(error => Notify.failure(error));
+    .catch(error => console.log(error));
 
   form.reset();
 }
@@ -97,5 +97,5 @@ function onLoadMoreBtnClick() {
         );
       }
     })
-    .catch(error => Notify.failure(error));
+    .catch(error => console.log(error));
 }
