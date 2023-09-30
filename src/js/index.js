@@ -30,12 +30,12 @@ function onInputSearch(event) {
           )
         );
       }
-      console.log(response.data);
+      // console.log(response.data);
       Notify.success(`Hooray! We found ${response.data.totalHits} images.`);
       renderImages(response.data.hits);
       loadMoreBtn.classList.remove('hidden-btn');
     })
-    .catch(error => console.log(error));
+    .catch(error => Notify.failure(error));
 
   form.reset();
 }
@@ -97,5 +97,5 @@ function onLoadMoreBtnClick() {
         );
       }
     })
-    .catch(error => console.log(error));
+    .catch(error => Notify.failure(error));
 }

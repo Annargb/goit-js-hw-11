@@ -19,7 +19,7 @@ async function fetchImageByRequest(userRequest, page) {
     `${BASE_URL}?key=${KEY}&q=${userRequest}&per_page=40&image_type=photo&orientation=horizontal&safesearch=true&page=${page}`,
     options
   );
-  console.log(response);
+  // console.log(response);
   return response;
 }
 export { fetchImageByRequest };
