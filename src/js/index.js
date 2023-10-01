@@ -19,23 +19,36 @@ function onInputSearch(event) {
   hideBtn();
 
   const userRequest = event.target.elements.searchQuery.value;
-  localStorage.setItem('currentRequest', userRequest);
+  if (!userRequest.trim().length) {
+    Notify.failure('Please fill out the search field.');
+  } else {
+    localStorage.setItem('currentRequest', userRequest);
 
-  fetchImageByRequest(userRequest, (page = 1))
-    .then(response => {
-      if (!response.data.hits.length) {
-        throw new Error(
-          Notify.failure(
-            'Sorry, there are no images matching your search query. Please try again.'
-          )
-        );
-      }
-      // console.log(response.data);
-      Notify.success(`Hooray! We found ${response.data.totalHits} images.`);
-      renderImages(response.data.hits);
-      loadMoreBtn.classList.remove('hidden-btn');
-    })
-    .catch(error => console.log(error));
+    fetchImageByRequest(userRequest, (page = 1))
+      .then(response => {
+        if (!response.data.hits.length) {
+          throw new Error(
+            Notify.failure(
+              'Sorry, there are no images matching your search query. Please try again.'
+            )
+          );
+        }
+        // console.log(response.data);
+        Notify.success(`Hooray! We found ${response.data.totalHits} images.`);
+        renderImages(response.data.hits);
+        if (response.data.hits.length < 40) {
+          hideBtn();
+          setTimeout(() => {
+            Notify.info(
+              "We're sorry, but you've reached the end of search results."
+            );
+          }, 2000);
+        } else {
+          loadMoreBtn.classList.remove('hidden-btn');
+        }
+      })
+      .catch(error => console.log(error));
+  }
 
   form.reset();
 }
@@ -76,7 +89,6 @@ function renderImages(arr) {
     )
     .join('');
   galleryContainer.insertAdjacentHTML('beforeend', markup);
-  // galleryContainer.innerHTML = markup;
 
   const gallery = new SimpleLightbox('.gallery a');
   gallery.refresh();
@@ -92,9 +104,14 @@ function onLoadMoreBtnClick() {
       renderImages(response.data.hits);
       if (response.data.hits.length < 40) {
         hideBtn();
-        Notify.failure(
-          "We're sorry, but you've reached the end of search results."
-        );
+        setTimeout(() => {
+          Notify.info(
+            "We're sorry, but you've reached the end of search results."
+          );
+        }, 2000);
+        // Notify.warning(
+        //   "We're sorry, but you've reached the end of search results."
+        // );
       }
     })
     .catch(error => console.log(error));
